@@ -90,6 +90,51 @@ npm run preview
 npm run lint
 ```
 
+## Deployment
+
+### Deploy to Vercel
+
+This project is configured for easy deployment to Vercel:
+
+1. **Connect your GitHub repository to Vercel:**
+   - Go to [vercel.com](https://vercel.com)
+   - Sign in with your GitHub account
+   - Click "New Project"
+   - Import your repository: `TioEnth06/NanoFi-Phase1`
+
+2. **Vercel will automatically detect the settings:**
+   - Framework Preset: Vite
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+   - Install Command: `npm install`
+
+3. **Deploy:**
+   - Click "Deploy"
+   - Vercel will build and deploy your application
+   - Your app will be live at `https://your-project.vercel.app`
+
+4. **Environment Variables (if needed):**
+   - Add any environment variables in Vercel dashboard
+   - Settings → Environment Variables
+
+### Manual Deployment
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+
+# For production
+vercel --prod
+```
+
+The `vercel.json` file is already configured with:
+- SPA routing (all routes redirect to index.html)
+- Build settings for Vite
+- Output directory configuration
+
 ## License
 
 Copyright © 2024 NanoFi. All rights reserved.

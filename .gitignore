@@ -32,3 +32,6 @@ dist-ssr
 # Export folder
 export_features
 
+# Vercel
+.vercel
+
