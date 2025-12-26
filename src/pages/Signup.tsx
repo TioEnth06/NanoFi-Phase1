@@ -17,6 +17,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Mail, Lock, Eye, EyeOff, User, ArrowRight, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const signupSchema = z.object({
   fullName: z.string().min(1, "Full name is required").min(2, "Full name must be at least 2 characters"),
@@ -38,9 +39,15 @@ type SignupFormData = z.infer<typeof signupSchema>;
 const Signup = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signup, isAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    navigate("/vault", { replace: true });
+  }
 
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -56,18 +63,27 @@ const Signup = () => {
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const success = await signup(data.email, data.password, data.fullName);
+      
+      if (!success) {
+        toast({
+          title: "Sign Up Failed",
+          description: "An account with this email already exists. Please use a different email or try logging in.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
       
       toast({
         title: "Account Created Successfully",
-        description: "Welcome! Your account has been created. Redirecting to login...",
+        description: "Welcome! Your account has been created. Redirecting to vault...",
         icon: <CheckCircle className="w-5 h-5 text-success" />,
       });
 
-      // Redirect to login page
+      // Redirect to vault overview page
       setTimeout(() => {
-        navigate("/login");
+        navigate("/vault", { replace: true });
       }, 1500);
     } catch (error) {
       toast({
@@ -75,7 +91,6 @@ const Signup = () => {
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };

@@ -11,6 +11,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
+  signup: (email: string, password: string, fullName: string) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -54,6 +55,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return false;
   };
 
+  const signup = async (email: string, password: string, _fullName: string): Promise<boolean> => {
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+    // Check if email already exists
+    const existingAccount = dummyAccounts.find(acc => acc.email === email);
+    if (existingAccount) {
+      return false;
+    }
+    
+    // Create new user account and automatically log them in
+    setIsAuthenticated(true);
+    const userData: User = { email: email, role: "user" };
+    setUser(userData);
+    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("user", JSON.stringify(userData));
+    
+    // Add to dummy accounts for future login
+    dummyAccounts.push({ email, password, role: "user" });
+    
+    return true;
+  };
+
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
@@ -62,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

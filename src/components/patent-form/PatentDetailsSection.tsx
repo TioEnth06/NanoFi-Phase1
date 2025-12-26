@@ -32,7 +32,7 @@ const categories = [
 const jurisdictions = [
   "USPTO (United States)", "EPO (Europe)", "JPO (Japan)", "CNIPA (China)",
   "KIPO (South Korea)", "UKIPO (United Kingdom)", "CIPO (Canada)", "IP Australia",
-  "WIPO (International)"
+  "DJKI (Indonesia)", "WIPO (International)"
 ];
 
 export function PatentDetailsSection({ onContinue, onValidationChange, initialData, onDataChange }: PatentDetailsSectionProps) {

@@ -1,6 +1,7 @@
 import { FileUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -17,6 +18,7 @@ const steps = [
 export const TokenizeSteps = () => {
   const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -96,6 +98,7 @@ export const TokenizeSteps = () => {
           <div className="space-y-4 mb-6 w-full">
             {steps.map((step, index) => {
               const isVisible = visibleSteps.includes(index);
+              const delay = index * 200;
               return (
                 <div
                   key={index}
@@ -105,7 +108,7 @@ export const TokenizeSteps = () => {
                       : 'opacity-0 translate-x-4'
                   }`}
                   style={{ 
-                    transitionDelay: `${index * 200}ms`,
+                    transitionDelay: `${delay}ms`,
                   }}
                 >
                   <div className="flex flex-col items-center">
@@ -116,7 +119,7 @@ export const TokenizeSteps = () => {
                           : 'scale-0'
                       }`}
                       style={{ 
-                        transitionDelay: `${index * 200 + 100}ms`,
+                        transitionDelay: `${delay + 100}ms`,
                         animation: isVisible ? 'pulse 2s infinite' : 'none'
                       }}
                     >
@@ -131,7 +134,7 @@ export const TokenizeSteps = () => {
                         }`}
                         style={{ 
                           backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                          transitionDelay: `${index * 200 + 300}ms`
+                          transitionDelay: `${delay + 300}ms`
                         }}
                       />
                     )}
@@ -141,7 +144,7 @@ export const TokenizeSteps = () => {
                       className={`text-xs text-primary-foreground/70 mb-0.5 transition-all duration-300 ${
                         isVisible ? 'opacity-100' : 'opacity-0'
                       }`}
-                      style={{ transitionDelay: `${index * 200 + 150}ms` }}
+                      style={{ transitionDelay: `${delay + 150}ms` }}
                     >
                       {step.title}
                     </p>
@@ -149,7 +152,7 @@ export const TokenizeSteps = () => {
                       className={`text-sm text-primary-foreground/90 transition-all duration-300 ${
                         isVisible ? 'opacity-100' : 'opacity-0'
                       }`}
-                      style={{ transitionDelay: `${index * 200 + 200}ms` }}
+                      style={{ transitionDelay: `${delay + 200}ms` }}
                     >
                       {step.description}
                     </p>
@@ -159,7 +162,10 @@ export const TokenizeSteps = () => {
             })}
           </div>
 
-          <Button className="w-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 gap-2">
+          <Button 
+            className="w-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 gap-2"
+            onClick={() => navigate("/vault/tokenize")}
+          >
             <FileUp className="w-4 h-4" />
             Tokenize Patent
           </Button>

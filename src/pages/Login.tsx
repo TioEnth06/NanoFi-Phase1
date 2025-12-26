@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -28,20 +28,14 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 const Login = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
-  const { login, isAuthenticated, user } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // Redirect if already authenticated
   if (isAuthenticated) {
-    let redirectPath = (location.state as any)?.from?.pathname || "/";
-    // If SPV user, redirect to SPV dashboard
-    if (user?.role === "spv") {
-      redirectPath = "/spv";
-    }
-    navigate(redirectPath, { replace: true });
+    navigate("/vault", { replace: true });
   }
 
   const form = useForm<LoginFormData>({
@@ -70,21 +64,13 @@ const Login = () => {
       
       toast({
         title: "Login Successful",
-        description: "Welcome back! Redirecting to dashboard...",
+        description: "Welcome back! Redirecting to vault...",
         icon: <CheckCircle className="w-5 h-5 text-success" />,
       });
 
-      // Determine redirect based on user role
-      // Check localStorage directly since state might not be updated yet
-      const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-      let redirectPath = (location.state as any)?.from?.pathname || "/";
-      
-      if (currentUser?.role === "spv") {
-        redirectPath = "/spv";
-      }
-      
+      // Redirect to vault overview page
       setTimeout(() => {
-        navigate(redirectPath, { replace: true });
+        navigate("/vault", { replace: true });
       }, 1500);
     } catch (error) {
       toast({
